@@ -3,7 +3,7 @@ from asgiref.sync import async_to_sync
 import json
 
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
-
+from channels.auth import login
 class TestConsumer(WebsocketConsumer):
     
     def connect(self):
@@ -14,6 +14,9 @@ class TestConsumer(WebsocketConsumer):
             self.channel_name
         )
         self.accept()
+        self.user = self.scope["user"]
+        print(vars(self.user))
+        print(vars(self))
         self.send(text_data=json.dumps({'status' : 'connected from django channels'}))
         
     
@@ -48,6 +51,8 @@ class NewConsumer(AsyncJsonWebsocketConsumer):
         )
         
         await self.accept()
+        self.user = self.scope["user"]
+        print(self.user)
         await self.send(text_data=json.dumps({'status' : 'connected from new async json consumer'}))
         
         
